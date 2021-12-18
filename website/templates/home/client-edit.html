@@ -1,0 +1,148 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Clientes {% endblock title %}
+
+{% block content %}
+
+<div class="header pb-6 d-flex align-items-center" 
+     style="min-height: 500px; background-image: url(/static/assets/img/theme/profile-cover.jpg); background-size: cover; background-position: center top;">
+  <!-- Mask -->
+  <span class="mask bg-gradient-default opacity-8"></span>
+  <!-- Header container -->
+  <div class="container-fluid d-flex align-items-center">
+    <div class="row">
+      <div class="col-lg-7 col-md-10">
+        <h1 class="display-2 text-white"> 
+          Hello current_user.username
+        </h1>
+        <p class="text-white mt-0 mb-5">This is your profile page. You can see the progress you've made with your work and manage your projects or assigned tasks</p>
+        <a href="#!" type="submit" class="btn btn-neutral">Edit profile</a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--6">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <form method="POST">
+          <div class="card-header">
+            <div class="row align-items-center">
+              <div class="col-8">
+                <h3 class="mb-0">Edit profile </h3>
+              </div>
+              <div class="col-4 text-right">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <h6 class="heading-small text-muted mb-4">Informações básicas</h6>
+            <div class="pl-lg-4">
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="company-name">Razão social</label>
+                    <input type="text" id="company-name" name="company-name" class="form-control" placeholder="Nome da empresa" >
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="phone">Telefone</label>
+                    <input type="tel" id="phone" name="phone" class="form-control" placeholder="telefone">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="income">Faturamento declarado</label>
+                    <input type="number" min = "0" step = "0.01" id="income" name="income" class="form-control" placeholder="123456.78" value="Lucky">
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="registration-date">Data de cadastro</label>
+                    <input type="date" id="registration-date" name="registration-date" class="form-control" >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr class="my-4" />
+            <!-- Address -->
+            <h6 class="heading-small text-muted mb-4">Endereço</h6>
+            <div class="pl-lg-4">
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <label class="form-control-label" for="address">Endereço</label>
+                    <input id="address" name="address" class="form-control" placeholder="Logradouro e número" type="text">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="form-control-label" for="address2">Complemento</label>
+                    <input id="address2" name="address2" class="form-control" placeholder="Apto, bloco, etc" type="text">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="district">Bairro</label>
+                    <input id="district" name="district" class="form-control" placeholder="Bairro" type="text">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="city">Cidade</label>
+                    <input id="city"  name="city" class="form-control" placeholder="Cidade" type="text">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label class="form-control-label" for="state">Estado</label>
+                    <input type="text" id="state" name="state" class="form-control" placeholder="Estado">
+                  </div>
+                </div>                
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label class="form-control-label" for="postal-code">CEP</label>
+                    <input type="number" id="postal-code" name="postal-code" class="form-control" placeholder="Postal code">
+                  </div>
+                </div>
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label class="form-control-label" for="country">País</label>
+                    <input type="text" id="country"  name="country" class="form-control" placeholder="País" value="Brasil">
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <hr class="my-4" />
+            <!-- Description -->
+            <h6 class="heading-small text-muted mb-4">Dados bancários</h6>
+            <div class="pl-lg-4">
+              <div class="form-group">
+                <label class="form-control-label">HELP</label>
+                <textarea rows="4" class="form-control" placeholder="A few words about you ...">A beautiful Dashboard for Bootstrap 4. It is Free and Open Source.</textarea>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  {% include "includes/footer.html" %}
+
+</div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}{% endblock javascripts %}
