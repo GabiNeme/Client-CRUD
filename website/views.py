@@ -1,12 +1,14 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 from . import db
 from website.models import Client
+import json
 
 views = Blueprint('views', __name__)
 
 @views.route('/')
 def home():
-    return render_template('home/clients.html')
+    clients = Client.query.all()
+    return render_template('home/clients.html', clients=clients)
 
 
 @views.route('/icons.html')
@@ -31,3 +33,13 @@ def profile():
             return redirect(url_for('views.home'))
     
     return render_template('home/client-edit.html')
+
+@views.route('/delete-client', methods=['POST'])
+def delete_client():
+    client = json.loads(request.data)
+    client_id = client['clientId']
+    client = Client.query.get(client_id)
+    if client:
+        db.session.delete(client)
+        db.session.commit()
+    return jsonify({})

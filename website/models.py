@@ -9,7 +9,7 @@ class Client(db.Model):
     phone = db.Column(db.String(20))
     company_name = db.Column(db.String(150), unique=True)
     income = db.Column(db.Float)
-    registration_date = db.Column(db.DateTime(timezone=False), default = func.now())
+    registration_date = db.Column(db.Date(), default = func.now())
     bank_accounts = db.relationship('BankAccount')
 
 class BankAccount(db.Model):
