@@ -25,6 +25,7 @@
 <div class="container-fluid mt--6">
   <div class="row">
     <div class="col">
+    {% include "includes/messages.html" %}
       <div class="card">
         <form method="POST">
           <div class="card-header">
@@ -58,7 +59,7 @@
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label" for="income">Faturamento declarado</label>
-                    <input type="number" min = "0" step = "0.01" id="income" name="income" class="form-control" placeholder="123456.78" value="Lucky">
+                    <input type="number" min = "0" step = "0.01" id="income" name="income" class="form-control" placeholder="123,45" value="Lucky">
                   </div>
                 </div>
                 <div class="col-lg-6">
