@@ -1,14 +1,14 @@
 function deleteClient(clientId) {
-    fetch('/client-delete',{
+    fetch('/clients/delete',{
         method: 'POST',
         body: JSON.stringify({clientId: clientId})
     }).then((_res) => {
-        window.location.href = '/';
+        window.location.href = "{{ url_for('views.client') }}";
     });
 }
 
 function updateClient(clientId) {
-    fetch('/client-update',{
+    fetch('/clients/update',{
         method: 'POST',
         body: JSON.stringify({clientId: clientId})
     }).then((_res) => {
