@@ -16,7 +16,7 @@ class Client(db.Model):
 
 class Address(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    client_id = db.Column(db.Integer, db.ForeignKey('client.id'))
+    client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
 
     street = db.Column(db.String(150))
     complement = db.Column(db.String(50))
@@ -28,5 +28,7 @@ class Address(db.Model):
 
 class BankAccount(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    bank = db.Column(db.String(20))
-    client_id = db.Column(db.Integer, db.ForeignKey('client.id'))
+    client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
+    bank = db.Column(db.String(50))
+    agency = db.Column(db.String(20))
+    account = db.Column(db.String(20))

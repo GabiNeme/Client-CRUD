@@ -3,15 +3,15 @@ function deleteClient(clientId) {
         method: 'POST',
         body: JSON.stringify({clientId: clientId})
     }).then((_res) => {
-        window.location.href = "{{ url_for('views.client') }}";
+        window.location.href = "/clients";
     });
 }
 
-function updateClient(clientId) {
-    fetch('/clients/update',{
+function deleteBankAccount(clientId, bankId) {
+    fetch('/clients/details/deletebankaccount',{
         method: 'POST',
-        body: JSON.stringify({clientId: clientId})
+        body: JSON.stringify({bankId: bankId})
     }).then((_res) => {
-        window.location.href = '/';
+        window.location.href = "/clients/details/".concat(clientId);
     });
 }

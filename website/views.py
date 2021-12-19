@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 from . import db
-from website.models import Address, Client
+from website.models import Address, BankAccount, Client
 import json
 
 views = Blueprint('views', __name__)
@@ -37,8 +37,7 @@ def client_update(clientId):
             client.phone = phone
             client.income = income
             db.session.commit()
-            flash('As informações foram salvas com sucesso.', category='success')
-            return redirect(url_for('views.clients'))    
+            return redirect(url_for('views.client_details', clientId=client.id))    
     else:
         return render_template('home/client-edit.html', title="Editar cliente", client=client)
 
@@ -69,7 +68,7 @@ def client_create():
             db.session.add(new_address)
             db.session.commit()
             flash('As informações foram salvas com sucesso.', category='success')
-            return redirect(url_for('views.clients'))
+            return redirect(url_for('views.client_details', clientId=client.id))    
     
     return render_template('home/client-edit.html', title="Novo cliente")
 
@@ -78,13 +77,35 @@ def client_delete():
     client = json.loads(request.data)
     client_id = client['clientId']
     client = Client.query.get(client_id)
+    address = Address.query.filter_by(client_id=client_id).first()
     if client:
         db.session.delete(client)
+        db.session.delete(address)
         db.session.commit()
     return jsonify({})
 
 
-@views.route('/clients/details', methods=['GET', 'POST'])
-def client_details():
-    client = Client.query.get(1)  
+@views.route('/clients/details/<clientId>', methods=['GET', 'POST'])
+def client_details(clientId):
+    client = Client.query.get(clientId)  
+    if request.method == 'POST':
+        bank = request.form.get('bank')
+        agency = request.form.get('agency')
+        account = request.form.get('account')
+        new_bank_account = BankAccount(client_id=client.id, bank=bank, agency=agency, account=account)
+        db.session.add(new_bank_account)
+        db.session.commit()
+        flash('As informações foram salvas com sucesso.', category='success')
+
     return render_template('home/client-details.html', client=client)
+
+
+@views.route('/clients/details/deletebankaccount', methods=['POST'])
+def bank_account_delete():
+    bank = json.loads(request.data)
+    bank_id = bank['bankId']
+    bank = BankAccount.query.get(bank_id)
+    if bank:
+        db.session.delete(bank)
+        db.session.commit()
+    return jsonify({})
