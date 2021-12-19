@@ -4,25 +4,26 @@
 
 {% block content %}
 
-<div class="header pb-6 d-flex align-items-center" 
-     style="min-height: 500px; background-image: url(/static/assets/img/theme/profile-cover.jpg); background-size: cover; background-position: center top;">
-  <!-- Mask -->
-  <span class="mask bg-gradient-default opacity-8"></span>
-  <!-- Header container -->
-  <div class="container-fluid d-flex align-items-center">
-    <div class="row">
-      <div class="col-lg-7 col-md-10">
-        <h1 class="display-2 text-white"> 
-          Hello current_user.username
-        </h1>
-        <p class="text-white mt-0 mb-5">This is your profile page. You can see the progress you've made with your work and manage your projects or assigned tasks</p>
-        <a href="#!" type="submit" class="btn btn-neutral">Edit profile</a>
+<div class="header bg-primary pb-8">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-lg-12 col-7">
+          <h6 class="h2 text-white d-inline-block mb-0">Clientes</h6>
+          <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i></a></li>
+              <li class="breadcrumb-item"><a href="/">Clientes</a></li>
+              <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+            </ol>
+          </nav>
+        </div>
       </div>
     </div>
   </div>
 </div>
 <!-- Page content -->
-<div class="container-fluid mt--6">
+<div class="container-fluid mt--8">
   <div class="row">
     <div class="col">
     {% include "includes/messages.html" %}
@@ -30,8 +31,13 @@
         <form method="POST">
           <div class="card-header">
             <div class="row align-items-center">
-              <div class="col-8">
-                <h3 class="mb-0">Edit profile </h3>
+              <div class="col-1">
+                <a class="nav-link active" href={{url_for('views.home')}}>
+                  <i class="ni ni-bold-left"></i>
+                </a>
+              </div>
+              <div class="col-7">
+                <h3 class="mb-0"> {{ title }} </h3>
               </div>
               <div class="col-4 text-right">
                 <button type="submit" class="btn btn-primary" data-toggle="modal">Salvar</button>
@@ -45,13 +51,21 @@
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label" for="company-name">Razão social</label>
-                    <input type="text" id="company-name" name="company-name" class="form-control" placeholder="Nome da empresa" >
+                     <input type="text" id="company-name" name="company-name" class="form-control" placeholder="Nome da empresa" 
+                     {% if client %}
+                     value="{{ client.company_name }}"
+                     {% endif %}
+                     >
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label" for="phone">Telefone</label>
-                    <input type="tel" id="phone" name="phone" class="form-control" placeholder="telefone">
+                    <input type="tel" id="phone" name="phone" class="form-control" placeholder="telefone"                     
+                    {% if client %}
+                    value="{{ client.phone }}"
+                    {% endif %}
+                    >
                   </div>
                 </div>
               </div>
@@ -59,13 +73,21 @@
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label" for="income">Faturamento declarado</label>
-                    <input type="number" min = "0" step = "0.01" id="income" name="income" class="form-control" placeholder="123,45" value="Lucky">
+                    <input type="number" min = "0" step = "0.01" id="income" name="income" class="form-control" placeholder="123,45"
+                    {% if client %}
+                    value="{{ client.income }}"
+                    {% endif %}
+                    >
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label" for="registration-date">Data de cadastro</label>
-                    <input type="date" id="registration-date" name="registration-date" class="form-control" >
+                    <input type="date" id="registration-date" name="registration-date" class="form-control"                     
+                    {% if client %}
+                    value="{{ client.registration_date }}"
+                    {% endif %}
+                    >
                   </div>
                 </div>
               </div>

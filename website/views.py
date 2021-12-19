@@ -15,8 +15,31 @@ def home():
 def icons():
     return render_template('home/icons.html')
 
-@views.route('/client-edit', methods=['GET', 'POST'])
-def profile():
+@views.route('/client-update/<clientId>', methods=['GET', 'POST'])
+def client_update(clientId):
+    
+    client = Client.query.get(clientId)
+    if request.method == 'POST':
+        company_name = request.form.get('company-name')
+        phone = request.form.get('phone')
+        income = request.form.get('income')
+        #registration_date = request.form.get('registration-date')
+
+        if len(company_name) < 2:
+            flash('A razão social deve ter pelo menos 2 caracteres.', category='error')
+        else:
+            client.company_name = company_name
+            client.phone = phone
+            client.income = income
+            db.session.commit()
+            flash('As informações foram salvas com sucesso.', category='success')
+            return redirect(url_for('views.home'))    
+    else:
+        return render_template('home/client-edit.html', title="Editar cliente", client=client)
+
+
+@views.route('/client-create', methods=['GET', 'POST'])
+def client_create():
     if request.method == 'POST':
         company_name = request.form.get('company-name')
         phone = request.form.get('phone')
@@ -32,10 +55,10 @@ def profile():
             flash('As informações foram salvas com sucesso.', category='success')
             return redirect(url_for('views.home'))
     
-    return render_template('home/client-edit.html')
+    return render_template('home/client-edit.html', title="Novo cliente")
 
-@views.route('/delete-client', methods=['POST'])
-def delete_client():
+@views.route('/client-delete', methods=['POST'])
+def client_delete():
     client = json.loads(request.data)
     client_id = client['clientId']
     client = Client.query.get(client_id)
