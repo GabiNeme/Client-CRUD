@@ -14,7 +14,7 @@ def home():
 @views.route('/clients')
 def clients():
     clients = Client.query.all()
-    return render_template('home/clients.html', clients=clients, format_currency=locale.currency)
+    return render_template('home/clients.html', clients=clients)
 
 
 @views.route('/icons.html')
@@ -26,36 +26,10 @@ def client_update(clientId):
     
     client = Client.query.get(clientId)
     if request.method == 'POST':
-        company_name = request.form.get('company-name')
-        phone = request.form.get('phone')
-        income = request.form.get('income')
-
-        street = request.form.get('street')
-        complement = request.form.get('complement')
-        district = request.form.get('district')
-        city = request.form.get('city')
-        state = request.form.get('state')
-        postal_code = request.form.get('postal-code')
-        country = request.form.get('country')
-
-        if len(company_name) < 2:
-            flash('A razão social deve ter pelo menos 2 caracteres.', category='error')
-        else:
-            client.name = company_name
-            client.phone = phone
-            client.income = income
-
-            client.address.street = street
-            client.address.complement = complement
-            client.address.district = district
-            client.address.city = city
-            client.address.state = state
-            client.address.postal_code = postal_code
-            client.address.country = country
-
-
-            db.session.commit()
-            return redirect(url_for('views.client_details', clientId=client.id))    
+        client = retrieve_client_from_request(request, client)
+        address = retrieve_address_from_request(request, client.address)
+        db.session.commit()
+        return redirect(url_for('views.client_details', clientId=client.id))    
     else:
         return render_template('home/client-edit.html', title="Editar cliente", client=client)
 
@@ -63,30 +37,14 @@ def client_update(clientId):
 @views.route('/clients/create', methods=['GET', 'POST'])
 def client_create():
     if request.method == 'POST':
-        company_name = request.form.get('company-name')
-        phone = request.form.get('phone')
-        income = request.form.get('income')
-
-        street = request.form.get('street')
-        complement = request.form.get('complement')
-        district = request.form.get('district')
-        city = request.form.get('city')
-        state = request.form.get('state')
-        postal_code = request.form.get('postal-code')
-        country = request.form.get('country')
-
-        if len(company_name) < 2:
-            flash('A razão social deve ter pelo menos 2 caracteres.', category='error')
-        else:
-            new_client = Client(name=company_name, phone=phone, income=income)
-            new_address = Address(street=street, complement=complement, district=district,
-                city=city, state=state, postal_code=postal_code, country=country, client_id=new_client.id)
-            new_client.address = new_address
-            db.session.add(new_client)
-            db.session.add(new_address)
-            db.session.commit()
-            flash('As informações foram salvas com sucesso.', category='success')
-            return redirect(url_for('views.client_details', clientId=new_client.id))    
+        client = retrieve_client_from_request(request)
+        address = retrieve_address_from_request(request, client.id)
+        client.address = address
+        db.session.add(client)
+        db.session.add(address)
+        db.session.commit()
+        flash('As informações foram salvas com sucesso.', category='success')
+        return redirect(url_for('views.client_details', clientId=client.id))    
     
     return render_template('home/client-edit.html', title="Novo cliente")
 
@@ -132,3 +90,39 @@ def bank_account_delete():
 @views.app_template_filter()
 def currency_format(value):
     return locale.currency(value, grouping=True)
+
+
+def retrieve_client_from_request(request, client=None):
+    company_name = request.form.get('company-name')
+    phone = request.form.get('phone')
+    income = request.form.get('income')
+
+    if client:
+        client.name = company_name
+        client.phone = phone
+        client.income = income
+    else:
+        client = Client(name=company_name, phone=phone, income=income)
+    return client
+
+def retrieve_address_from_request(request, address=None, client_id=None):
+    street = request.form.get('street')
+    complement = request.form.get('complement')
+    district = request.form.get('district')
+    city = request.form.get('city')
+    state = request.form.get('state')
+    postal_code = request.form.get('postal-code')
+    country = request.form.get('country')
+
+    if address:
+        address.street = street
+        address.complement = complement
+        address.district = district
+        address.city = city
+        address.state = state
+        address.postal_code = postal_code
+        address.country = country
+    else:            
+        address = Address(street=street, complement=complement, district=district,
+                city=city, state=state, postal_code=postal_code, country=country, client_id=client_id)
+    return address
