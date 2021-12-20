@@ -17,8 +17,6 @@ def create_app():
     from .views import views
     app.register_blueprint(views)
 
-    from .models import Client, BankAccount
-
     create_database(app)
     
     return app

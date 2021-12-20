@@ -7,8 +7,8 @@ from sqlalchemy import func
 
 class Client(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    phone = db.Column(db.String(20))
     name = db.Column(db.String(150))
+    phone = db.Column(db.String(20))
     income = db.Column(db.Float)
     registration_date = db.Column(db.Date(), default = func.now())
     address = db.relationship("Address", uselist=False, backref="client")
