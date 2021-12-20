@@ -23,8 +23,10 @@ def icons():
 
 @views.route('/clients/update/<clientId>', methods=['GET', 'POST'])
 def client_update(clientId):
-    
     client = Client.query.get(clientId)
+    if not client:
+        return render_template('home/page-404.html') 
+        
     if request.method == 'POST':
         passed_validation, message = check_client_validation_rules(request)
 
@@ -72,7 +74,10 @@ def client_delete():
 
 @views.route('/clients/details/<clientId>', methods=['GET', 'POST'])
 def client_details(clientId):
-    client = Client.query.get(clientId)  
+    client = Client.query.get(clientId)
+    if not client:
+        return render_template('home/page-404.html') 
+
     if request.method == 'POST':
         bank = request.form.get('bank')
         agency = request.form.get('agency')
