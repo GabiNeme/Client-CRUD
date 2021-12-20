@@ -1,6 +1,9 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
+import locale
+
+locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
 db = SQLAlchemy()
 DB_NAME = 'database.db'

@@ -12,8 +12,8 @@
           <h6 class="h2 text-white d-inline-block mb-0">{{ client.name }}</h6>
           <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-              <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i></a></li>
-              <li class="breadcrumb-item"><a href="/">Clientes</a></li>
+              <li class="breadcrumb-item"><a href="{{url_for('views.home')}}"><i class="fas fa-home"></i></a></li>
+              <li class="breadcrumb-item"><a href="{{ url_for('views.clients') }}">Clientes</a></li>
               <li class="breadcrumb-item active" aria-current="page"> {{ client.name }}</li>
             </ol>
           </nav>
@@ -31,7 +31,7 @@
             <div class="card-header">
               <div class="row align-items-center">
                 <div class="col-1">
-                  <a class="nav-link active" href="{{ url_for('views.home') }}">
+                  <a class="nav-link active" href="#" onClick="history.back()">
                     <i class="ni ni-bold-left"></i>
                   </a>
                 </div>
@@ -43,7 +43,7 @@
                     <button type="submit" class="btn btn-primary" data-toggle="modal" >Editar</button>
                   </a>
                   <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteClient">
-                    <i class="fa fa-trash"></i>
+                    <i class="fa fa-trash" ></i>
                   </button>
                 </div>
               </div>
@@ -61,7 +61,7 @@
                   <div class="col-md-4">
                     <div class="form-group">
                       <div><h7 class="heading-small text-muted mb-4">Faturamento declarado</h7></div>
-                      <div> R$ {{ "{:.2f}".format(client.income).replace('.', ',') }}</div>
+                      <div> {{ client.income | currency_format }}</div>
                     </div>
                   </div>
                   <div class="col-md-4">

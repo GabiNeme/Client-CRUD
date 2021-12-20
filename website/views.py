@@ -2,8 +2,9 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for,
 from . import db
 from website.models import Address, BankAccount, Client
 import json
+import locale
 
-views = Blueprint('views', __name__)
+views = Blueprint('views', __name__, template_folder='templates')
 
 @views.route('/')
 def home():
@@ -13,7 +14,7 @@ def home():
 @views.route('/clients')
 def clients():
     clients = Client.query.all()
-    return render_template('home/clients.html', clients=clients)
+    return render_template('home/clients.html', clients=clients, format_currency=locale.currency)
 
 
 @views.route('/icons.html')
@@ -28,7 +29,14 @@ def client_update(clientId):
         company_name = request.form.get('company-name')
         phone = request.form.get('phone')
         income = request.form.get('income')
-        #registration_date = request.form.get('registration-date')
+
+        street = request.form.get('street')
+        complement = request.form.get('complement')
+        district = request.form.get('district')
+        city = request.form.get('city')
+        state = request.form.get('state')
+        postal_code = request.form.get('postal-code')
+        country = request.form.get('country')
 
         if len(company_name) < 2:
             flash('A razão social deve ter pelo menos 2 caracteres.', category='error')
@@ -36,6 +44,16 @@ def client_update(clientId):
             client.name = company_name
             client.phone = phone
             client.income = income
+
+            client.address.street = street
+            client.address.complement = complement
+            client.address.district = district
+            client.address.city = city
+            client.address.state = state
+            client.address.postal_code = postal_code
+            client.address.country = country
+
+
             db.session.commit()
             return redirect(url_for('views.client_details', clientId=client.id))    
     else:
@@ -68,7 +86,7 @@ def client_create():
             db.session.add(new_address)
             db.session.commit()
             flash('As informações foram salvas com sucesso.', category='success')
-            return redirect(url_for('views.client_details', clientId=client.id))    
+            return redirect(url_for('views.client_details', clientId=new_client.id))    
     
     return render_template('home/client-edit.html', title="Novo cliente")
 
@@ -109,3 +127,8 @@ def bank_account_delete():
         db.session.delete(bank)
         db.session.commit()
     return jsonify({})
+
+
+@views.app_template_filter()
+def currency_format(value):
+    return locale.currency(value, grouping=True)
