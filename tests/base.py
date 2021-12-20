@@ -33,3 +33,30 @@ class BaseTestCase(TestCase):
     def tearDown(self):
         db.session.remove()
         db.drop_all()
+    
+
+    default_company_name="Company default"
+    default_phone="0551133333333"
+    default_income="11002525.02"
+    default_street="street_default"
+    default_complement="complement_default"
+    default_district="district_default"
+    default_city="city_default"
+    default_state="state_default"
+    default_postal_code="11111111"
+    default_country="country_default"
+    default_income_formated="R$ 11.002.525,02"
+
+    def defaultClient(self):
+        return dict(
+            company_name=self.default_company_name, 
+            phone=self.default_phone, 
+            income=self.default_income, 
+            street=self.default_street, 
+            complement=self.default_complement, 
+            district=self.default_district, 
+            city=self.default_city, 
+            state=self.default_state, 
+            postal_code=self.default_postal_code, 
+            country=self.default_country, 
+            )

@@ -19,45 +19,54 @@ def clients():
 
 @views.route('/icons.html')
 def icons():
-    return render_template('home/icons.html')
+    return render_template('home/page-404.html')
 
 @views.route('/clients/update/<clientId>', methods=['GET', 'POST'])
 def client_update(clientId):
     
     client = Client.query.get(clientId)
     if request.method == 'POST':
-        client = retrieve_client_from_request(request, client)
-        address = retrieve_address_from_request(request, client.address)
-        db.session.commit()
-        return redirect(url_for('views.client_details', clientId=client.id))    
-    else:
-        return render_template('home/client-edit.html', title="Editar cliente", client=client)
+        passed_validation, message = check_client_validation_rules(request)
+
+        if  passed_validation:
+            client = retrieve_client_from_request(request, client)
+            address = retrieve_address_from_request(request, client.address)
+            db.session.commit()
+            return redirect(url_for('views.client_details', clientId=client.id))    
+        else: 
+            flash(message, category='error')
+
+    return render_template('home/client-edit.html', title="Editar cliente", client=client)
 
 
 @views.route('/clients/create', methods=['GET', 'POST'])
 def client_create():
-    if request.method == 'POST':
-        client = retrieve_client_from_request(request)
-        address = retrieve_address_from_request(request, client.id)
-        client.address = address
-        db.session.add(client)
-        db.session.add(address)
-        db.session.commit()
-        flash('As informações foram salvas com sucesso.', category='success')
-        return redirect(url_for('views.client_details', clientId=client.id))    
-    
+    if request.method == 'POST':        
+        passed_validation, message = check_client_validation_rules(request)
+
+        if passed_validation:
+            client = retrieve_client_from_request(request)
+            address = retrieve_address_from_request(request, client.id)
+            client.address = address
+            db.session.add(client)
+            db.session.add(address)
+            db.session.commit()
+            return redirect(url_for('views.client_details', clientId=client.id))    
+        else: 
+            flash(message, category='error')
     return render_template('home/client-edit.html', title="Novo cliente")
 
 @views.route('/clients/delete', methods=['POST'])
 def client_delete():
     client = json.loads(request.data)
     client_id = client['clientId']
-    client = Client.query.get(client_id)
-    address = Address.query.filter_by(client_id=client_id).first()
     if client:
-        db.session.delete(client)
-        db.session.delete(address)
+        db.session.query(BankAccount).filter(BankAccount.client_id==client_id).delete()
+        db.session.query(Address).filter(Address.client_id==client_id).delete()
+        db.session.query(Client).filter(Client.id==client_id).delete()
         db.session.commit()
+        flash('O cliente foi apagado com sucesso.', category='success')
+
     return jsonify({})
 
 
@@ -93,7 +102,7 @@ def currency_format(value):
 
 
 def retrieve_client_from_request(request, client=None):
-    company_name = request.form.get('company-name')
+    company_name = request.form.get('company_name')
     phone = request.form.get('phone')
     income = request.form.get('income')
 
@@ -111,7 +120,7 @@ def retrieve_address_from_request(request, address=None, client_id=None):
     district = request.form.get('district')
     city = request.form.get('city')
     state = request.form.get('state')
-    postal_code = request.form.get('postal-code')
+    postal_code = request.form.get('postal_code')
     country = request.form.get('country')
 
     if address:
@@ -126,3 +135,28 @@ def retrieve_address_from_request(request, address=None, client_id=None):
         address = Address(street=street, complement=complement, district=district,
                 city=city, state=state, postal_code=postal_code, country=country, client_id=client_id)
     return address
+
+def check_client_validation_rules(request):
+    company_name = request.form.get('company_name')
+    phone = request.form.get('phone')
+    income = request.form.get('income')
+
+    if len(company_name) < 2:
+        return False, 'A razão social da empresa deve ter pelo menos 2 caracteres.'
+    elif len(phone) < 8:
+        return False, 'O telefone deve ter pelo menos 8 dígitos.'
+    elif len(income) < 1:
+        return False, 'O preenchimento do faturamento é obrigatório.'
+    elif not is_float(income):
+        return False, 'O faturamento deve ser um número.'
+    elif float(income) < 0:
+        return False, 'O faturamento deve ser maior que zero.'
+    
+    return True, ''
+
+def is_float(value_string):
+    try:
+        float(value_string)
+    except ValueError:
+        return False
+    return True

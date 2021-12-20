@@ -93,7 +93,7 @@ def currency_format(value):
 
 
 def retrieve_client_from_request(request, client=None):
-    company_name = request.form.get('company-name')
+    company_name = request.form.get('company_name')
     phone = request.form.get('phone')
     income = request.form.get('income')
 
@@ -111,7 +111,7 @@ def retrieve_address_from_request(request, address=None, client_id=None):
     district = request.form.get('district')
     city = request.form.get('city')
     state = request.form.get('state')
-    postal_code = request.form.get('postal-code')
+    postal_code = request.form.get('postal_code')
     country = request.form.get('country')
 
     if address:
