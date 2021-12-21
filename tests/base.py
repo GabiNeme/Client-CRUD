@@ -1,7 +1,7 @@
 from flask_testing import TestCase
 
-from website import create_app, db
-from website.models import *
+from src import create_app, db
+from src.models import *
 
 class BaseTestCase(TestCase):
 

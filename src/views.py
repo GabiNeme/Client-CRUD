@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 from . import db
-from website.models import Address, BankAccount, Client
+from src.models import Address, BankAccount, Client
 import json
 import locale
 
