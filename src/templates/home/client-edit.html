@@ -142,7 +142,7 @@
                 <div class="col-lg-4">
                   <div class="form-group">
                     <label class="form-control-label" for="postal_code">CEP</label>
-                    <input type="number" id="postal_code" name="postal_code" class="form-control" placeholder="Postal code"
+                    <input type="text" id="postal_code" name="postal_code" class="form-control" placeholder="CEP"
                     {% if client %}
                     value="{{ client.address.postal_code }}"
                     {% endif %}

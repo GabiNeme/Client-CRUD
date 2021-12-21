@@ -45,7 +45,7 @@
                 <tr>
                   <th scope="col" class="sort" data-sort="name">Razão social</th>
                   <th scope="col" class="sort" data-sort="phone">Telefone</th>
-                  <th scope="col" class="sort" data-sort="address">Endereço</th>
+                  <th scope="col" class="sort" data-sort="address">Município</th>
                   <th scope="col" class="sort" data-sort="income">Faturamento</th>
                   <th scope="col" class="sort" data-sort="date">Cadastro</th>
                   <th scope="col"></th>
@@ -69,7 +69,7 @@
                     {{ client.phone }}
                   </td>
                   <td>
-                    {{ client.address.street }}
+                    {{ client.address.city }}, {{ client.address.state }}
                   </td>
                   <td class="text-right">
                     {{ client.income | currency_format }}
