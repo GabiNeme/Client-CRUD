@@ -17,10 +17,6 @@ def clients():
     return render_template('home/clients.html', clients=clients)
 
 
-@views.route('/icons.html')
-def icons():
-    return render_template('home/page-404.html')
-
 @views.route('/clients/update/<clientId>', methods=['GET', 'POST'])
 def client_update(clientId):
     client = Client.query.get(clientId)
