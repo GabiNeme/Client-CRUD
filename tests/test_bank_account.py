@@ -42,9 +42,9 @@ class BankAccountValidationRulesTestCase(BaseTestCase):
             ),
             follow_redirects=True
         )
-        self.assertNotIn('refuse_empty_bank_name', response.data.decode())
         self.assertNotEqual('{}\n', response.data.decode())
-
+        response = self.client.get(url_for('views.client_details', clientId=1))
+        self.assertNotIn('refuse_empty_bank_name', response.data.decode())
 
     def test_refuse_create_empty_agency(self):
         response = self.client.post(
@@ -56,8 +56,9 @@ class BankAccountValidationRulesTestCase(BaseTestCase):
             ),
             follow_redirects=True
         )
-        self.assertNotIn('refuse_empty_agency', response.data.decode())
         self.assertNotEqual('{}\n', response.data.decode())
+        response = self.client.get(url_for('views.client_details', clientId=1))
+        self.assertNotIn('refuse_empty_agency', response.data.decode())
 
     def test_refuse_create_empty_account(self):
         response = self.client.post(
@@ -69,5 +70,6 @@ class BankAccountValidationRulesTestCase(BaseTestCase):
             ),
             follow_redirects=True
         )
-        self.assertNotIn('refuse_empty_account', response.data.decode())
         self.assertNotEqual('{}\n', response.data.decode())
+        response = self.client.get(url_for('views.client_details', clientId=1))
+        self.assertNotIn('refuse_empty_account', response.data.decode())
