@@ -46,7 +46,7 @@ class ClientCRUDTestCase(BaseTestCase):
             content_type='application/json',
             follow_redirects=True
         )
-        self.assertIn('{}\n', response.data.decode())
+        self.assertEqual('{}\n', response.data.decode())
         response = self.client.get(url_for('views.clients'))
         self.assertNotIn(self.default_company_name, response.data.decode())
     

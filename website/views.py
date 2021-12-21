@@ -26,7 +26,7 @@ def client_update(clientId):
     client = Client.query.get(clientId)
     if not client:
         return render_template('home/page-404.html') 
-        
+
     if request.method == 'POST':
         passed_validation, message = check_client_validation_rules(request)
 
@@ -79,13 +79,19 @@ def client_details(clientId):
         return render_template('home/page-404.html') 
 
     if request.method == 'POST':
-        bank = request.form.get('bank')
-        agency = request.form.get('agency')
-        account = request.form.get('account')
-        new_bank_account = BankAccount(client_id=client.id, bank=bank, agency=agency, account=account)
-        db.session.add(new_bank_account)
-        db.session.commit()
-        flash('As informações foram salvas com sucesso.', category='success')
+        passed_validation, message = check_bank_account_validation_rules(request)
+
+        if passed_validation:
+
+            bank = request.form.get('bank')
+            agency = request.form.get('agency')
+            account = request.form.get('account')
+            new_bank_account = BankAccount(client_id=client.id, bank=bank, agency=agency, account=account)
+            db.session.add(new_bank_account)
+            db.session.commit()
+            flash('As informações foram salvas com sucesso.', category='success')
+        else:
+            flash(message, category='error')
 
     return render_template('home/client-details.html', client=client)
 
@@ -156,7 +162,6 @@ def check_client_validation_rules(request):
         return False, 'O faturamento deve ser um número.'
     elif float(income) < 0:
         return False, 'O faturamento deve ser maior que zero.'
-    
     return True, ''
 
 def is_float(value_string):
@@ -165,3 +170,16 @@ def is_float(value_string):
     except ValueError:
         return False
     return True
+
+def check_bank_account_validation_rules(request):
+    bank = request.form.get('bank')
+    agency = request.form.get('agency')
+    account = request.form.get('account')
+
+    if len(bank) < 2:
+        return False, 'O nome do banco deve ter pelo menos 2 caracteres.'
+    elif len(agency) < 1:
+        return False, 'O preenchimento da agência é obrigatório.'
+    elif len(account) < 1:
+        return False, 'O preenchimento da conta é obrigatório.'
+    return True, ''
